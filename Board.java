@@ -29,9 +29,9 @@ public class Board {
         pieces.put(new Coordinate(1, 7), new Piece(this, PieceType.KNIGHT, Side.WHITE));
         pieces.put(new Coordinate(1, 8), new Piece(this, PieceType.ROOK, Side.WHITE));
         // WHITE PAWNs
-        // for (int i = 1; i < 9; i++) {
-        //     pieces.put(new Coordinate(2, i), new Piece(this, PieceType.PAWN, Side.WHITE));
-        // }
+        for (int i = 1; i < 9; i++) {
+            pieces.put(new Coordinate(2, i), new Piece(this, PieceType.PAWN, Side.WHITE));
+        }
         // BLACK
         pieces.put(new Coordinate(8, 1), new Piece(this, PieceType.ROOK, Side.BLACK));
         pieces.put(new Coordinate(8, 2), new Piece(this, PieceType.KNIGHT, Side.BLACK));
@@ -43,9 +43,9 @@ public class Board {
         pieces.put(new Coordinate(8, 7), new Piece(this, PieceType.KNIGHT, Side.BLACK));
         pieces.put(new Coordinate(8, 8), new Piece(this, PieceType.ROOK, Side.BLACK));
         // BLACK PAWNs
-        // for (int i = 1; i < 9; i++) {
-        //     pieces.put(new Coordinate(7, i), new Piece(this, PieceType.PAWN, Side.BLACK));
-        // }
+        for (int i = 1; i < 9; i++) {
+            pieces.put(new Coordinate(7, i), new Piece(this, PieceType.PAWN, Side.BLACK));
+        }
     }
 
     protected Coordinate king(Side side) {
@@ -106,6 +106,7 @@ public class Board {
                 end.print();
                 System.out.println("");
             }
+            System.err.print("Board: move(): Valid Move!");
             pieces.put(end, piece); // overriding piece on end square
             pieces.put(start, null); // removing piece from starting square
             moves.add(new Move(this, this.pieces.get(start), start, end));

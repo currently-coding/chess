@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Collections;
+
 public enum PieceType {
     EMPTY,
     PAWN,
@@ -22,23 +25,19 @@ public enum PieceType {
     public boolean possible_move(Board board, Piece piece, Coordinate start, Coordinate end) {
         // check check
         Side color = piece.getColor();
-        // if (color.is_checked(board)) {
-        // // temporarily try out move
-        // // store whats on the relevant fields now
-        // Piece end_piece = board.pieces.get(end);
+        if (color.is_checked(board)) {
+            // temporarily try out move
+            // store whats on the relevant fields now
+            Piece end_piece = board.pieces.get(end);
 
-        // board.pieces.put(end, piece);
-        // board.pieces.put(start, null);
-        // if (color.is_checked(board)) {
-        // return false;
-        // }
-        // board.pieces.put(start, piece);
-        // board.pieces.put(end, end_piece);
-        // }
-
-        // if not checked -> valid
-        // else -> invalid
-        // revert to previous state and evaluate
+            board.pieces.put(end, piece);
+            board.pieces.put(start, null);
+            if (color.is_checked(board)) {
+                return false;
+            }
+            board.pieces.put(start, piece);
+            board.pieces.put(end, end_piece);
+        }
 
         // Boundaries check
         if (!(end.row < 9 && end.row > 0)) {
@@ -48,27 +47,37 @@ public enum PieceType {
             System.err.println("PieceType: possible_move(): Move out of bounds");
             return false;
         }
-        return valid_move(board, piece, start, end);
+        ArrayList<Coordinate> path = valid_move(board, piece, start, end);
+        if (path.isEmpty()) {
+            return false;
+        }
+        if (this != KNIGHT && this != KING)
+            return !blocked(board, path);
+        else
+            return true;
     }
 
-    public boolean valid_move(Board board, Piece piece, Coordinate start, Coordinate end) {
+    public ArrayList<Coordinate> valid_move(Board board, Piece piece, Coordinate start, Coordinate end) {
         System.err.println("PieceType: checking move");
 
         switch (this) {
             case ROOK -> {
-                return (this.horizontal_vertical_movement(start, end));
+                return (this.horizontal_vertical_movement(board, start, end));
             }
             case KNIGHT -> {
-                return (this.knight_movement(start, end));
+                return (this.knight_movement(board, start, end));
             }
             case QUEEN -> {
-                return (this.horizontal_vertical_movement(start, end) || this.diagonal_movement(start, end));
+                if (start.row != end.row && start.col != end.col) {
+                    return this.diagonal_movement(board, start, end);
+                }
+                return (this.horizontal_vertical_movement(board, start, end));
             }
             case BISHOP -> {
-                return this.diagonal_movement(start, end);
+                return this.diagonal_movement(board, start, end);
             }
             case PAWN -> {
-                return pawn_movement(start, end, board);
+                return pawn_movement(board, start, end);
             }
             case KING -> {
                 return king_movement(start, end);
@@ -77,88 +86,80 @@ public enum PieceType {
         }
     }
 
-    private boolean diagonal_movement(Coordinate start, Coordinate end) {
-        return (Math.abs(start.col - end.col) == 0 && Math.abs(start.row - end.col) == 0);
+    public boolean blocked(Board board, ArrayList<Coordinate> path) {
+        for (Coordinate c : path) { // check if there are any pieces on path
+            if (board.pieces.get(c) != null) {
+                return false;
+            }
+        }
+        return true;
     }
 
-    private boolean king_movement(Coordinate start, Coordinate end) {
-        return (Math.abs(start.row - end.row) < 2 && Math.abs(start.col - end.col) < 2);
+    // rewrite all movement to return a path array they cover while moving. If
+    // invalid -> return empty array
+    private ArrayList<Coordinate> diagonal_movement(Board board, Coordinate start, Coordinate end) {
+        ArrayList<Coordinate> result = new ArrayList<>();
+        if (!(Math.abs(start.col - end.col) == 0 && Math.abs(start.row - end.col) == 0))
+            return result;
+        return result;
     }
 
-    private boolean horizontal_vertical_movement(Coordinate start, Coordinate end) {
+    private ArrayList<Coordinate> king_movement(Coordinate start, Coordinate end) {
+        ArrayList<Coordinate> result = new ArrayList<>();
+        if (!(Math.abs(start.row - end.row) < 2 && Math.abs(start.col - end.col) < 2))
+            return result;
+        result.add(end);
+        return result;
+
+    }
+
+    private ArrayList<Coordinate> horizontal_vertical_movement(Board board, Coordinate start, Coordinate end) {
+        ArrayList<Coordinate> result = new ArrayList<>();
         // horizontal movement
         if (start.col == end.col && start.row != end.row) {
-            return true;
+            int row = start.row;
+            int direction = start.row < end.row ? 1 : -1;
+            while (row != end.row) {
+                if (board.pieces.get(new Coordinate(start.col, row)) != null) {
+                    return new ArrayList<>();
+                }
+                result.add(new Coordinate(start.col, row));
+                row += (1 * direction);
+            }
+            return result;
         }
         // vertical movement
         else if (start.col != end.col && start.row == end.row) {
-            return true;
+            int col = start.col;
+            int direction = start.col < end.col ? 1 : -1;
+            while (col != end.col) {
+
+                if (board.pieces.get(new Coordinate(col, start.row)) != null) {
+                    return new ArrayList<>();
+                }
+                result.add(new Coordinate(start.row, col));
+                col += (1 * direction);
+            }
+            return result;
         }
-        return false;
+
+        return result;
     }
 
-    private boolean knight_movement(Coordinate start, Coordinate end) {
+    private ArrayList<Coordinate> knight_movement(Board board, Coordinate start, Coordinate end) {
         if (Math.abs(start.col - end.col) == 2 && Math.abs(start.row - end.row) == 1) {
-            return true;
+            return new ArrayList<>(Collections.singletonList(end));
         } else if (Math.abs(start.col - end.col) == 1 && Math.abs(start.row - end.row) == 2) {
-            return true;
+            return new ArrayList<>(Collections.singletonList(end));
         }
-        return false;
+        return new ArrayList<>();
     }
 
     // TODO: double check pawn movement -> not working right now
     // TODO: write en passant movement
-    private boolean pawn_movement(Coordinate start, Coordinate end, Board board) {
-        // int rowDiff = end.row - start.row;
-        // int colDiff = Math.abs(end.col - start.col);
 
-        // if (piece.getColor() == Side.WHITE) {
-        // // Standard move one step forward
-        // if (rowDiff == 1 && colDiff == 0 && !board.is_piece(end)) {
-        // return true;
-        // }
-        // // Initial move two steps forward
-        // if (start.row == 2 && rowDiff == 2 && colDiff == 0 && !board.is_piece(end))
-        // && !board.is_piece(end)) {
-        // return true;
-        // }
-        // // Capture move
-        // if (rowDiff == 1 && colDiff == 1 && board.is_piece(end) &&
-        // board.getPiece(end).getColor() == Side.BLACK) {
-        // return true;
-        // }
-        // // En passant (not fully implemented here, requires additional state)
-        // // if (rowDiff == 1 && colDiff == 1 && !board.is_piece(end)) {
-        // // return handleEnPassant(piece, start, end, board);
-        // // }
-        // } else if (piece.getColor() == Side.BLACK) {
-        // // Standard move one step forward
-        // if (rowDiff == -1 && colDiff == 0 && !board.is_piece(end)) {
-        // return true;
-        // }
-        // // Initial move two steps forward
-        // if (start.row == 7 && rowDiff == -2 && colDiff == 0 && !board.is_piece(end))
-        // && !board.is_piece(end)) {
-        // return true;
-        // }
-        // // Capture move
-        // if (rowDiff == -1 && colDiff == 1 && board.is_piece(end) &&
-        // board.getPiece(end).getColor() == Side.WHITE) {
-        // return true;
-        // }
-        // // En passant (not fully implemented here, requires additional state)
-        // // if (rowDiff == -1 && colDiff == 1 && !board.is_piece(end)) {
-        // // return handleEnPassant(piece, start, end, board);
-        // // }
-        // }
-
-        return false;
+    private ArrayList<Coordinate> pawn_movement(Board board, Coordinate start, Coordinate end) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    // Placeholder for en passant handling (not implemented)
-    // private boolean handleEnPassant(Piece piece, Coordinate start, Coordinate
-    // end, Board board) {
-    // // Implement en passant logic here
-    // return false;
-    // }
 }

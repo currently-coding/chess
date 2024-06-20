@@ -1,25 +1,26 @@
 
-
 public enum Side {
     BLACK,
     WHITE,
     UNDEFINED;
 
+    @SuppressWarnings("unused")
     public boolean is_checked(Board board) {
         Coordinate king = board.king(this);
-        for (Coordinate coordinate : board.pieces.keySet()) { // check for each piece
-            Piece piece = board.pieces.get(coordinate);
-            if (piece == null) {
-                continue;
-            }
-            if (piece.getColor() != this) { // only opponent's pieces can check
-                if (piece.getType().valid_move(
-                        board, piece, coordinate, king)) { // check if current piece could move at king's position
-                    return true;
-                }
-            }
+        // for (Coordinate coordinate : board.pieces.keySet()) { // check for each piece
+        // Piece piece = board.pieces.get(coordinate);
+        // if (piece == null) {
+        // continue;
+        // }
+        // if (piece.getColor() != this) { // only opponent's pieces can check
+        // if (!piece.getType().valid_move(
+        // board, piece, coordinate, king).isEmpty()) { // check if current piece could
+        // move at king's position
+        // return true;
+        // }
+        // }
 
-        }
+        // }
         return false;
     }
 
