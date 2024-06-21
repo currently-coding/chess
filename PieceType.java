@@ -25,14 +25,14 @@ public enum PieceType {
     public boolean possible_move(Board board, Piece piece, Coordinate start, Coordinate end) {
         // check check
         Side color = piece.getColor();
-        if (color.is_checked(board)) {
+        if (!color.is_checked(board).isEmpty()) {
             // temporarily try out move
             // store whats on the relevant fields now
             Piece end_piece = board.pieces.get(end);
 
             board.pieces.put(end, piece);
             board.pieces.put(start, null);
-            if (color.is_checked(board)) {
+            if (!color.is_checked(board).isEmpty()) {
                 return false;
             }
             board.pieces.put(start, piece);
@@ -51,10 +51,7 @@ public enum PieceType {
         if (path.isEmpty()) {
             return false;
         }
-        if (this != KNIGHT && this != KING)
-            return !blocked(board, path);
-        else
-            return true;
+        return true;
     }
 
     public ArrayList<Coordinate> valid_move(Board board, Piece piece, Coordinate start, Coordinate end) {
@@ -86,21 +83,13 @@ public enum PieceType {
         }
     }
 
-    public boolean blocked(Board board, ArrayList<Coordinate> path) {
-        for (Coordinate c : path) { // check if there are any pieces on path
-            if (board.pieces.get(c) != null) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     // rewrite all movement to return a path array they cover while moving. If
     // invalid -> return empty array
     private ArrayList<Coordinate> diagonal_movement(Board board, Coordinate start, Coordinate end) {
         ArrayList<Coordinate> result = new ArrayList<>();
         if (!(Math.abs(start.col - end.col) == 0 && Math.abs(start.row - end.col) == 0))
             return result;
+        // check for collissions on path
         return result;
     }
 
@@ -109,6 +98,7 @@ public enum PieceType {
         if (!(Math.abs(start.row - end.row) < 2 && Math.abs(start.col - end.col) < 2))
             return result;
         result.add(end);
+        // king can always take and has no path
         return result;
 
     }
@@ -152,6 +142,7 @@ public enum PieceType {
         } else if (Math.abs(start.col - end.col) == 1 && Math.abs(start.row - end.row) == 2) {
             return new ArrayList<>(Collections.singletonList(end));
         }
+        // Knight has no collissions
         return new ArrayList<>();
     }
 
