@@ -49,7 +49,7 @@ public class Game {
     }
 
     public Side switch_sides(Side active_player) {
-       return active_player == Side.BLACK ? Side.WHITE : Side.BLACK;
+        return active_player == Side.BLACK ? Side.WHITE : Side.BLACK;
     }
 
     public final Side play() {
