@@ -19,6 +19,7 @@ public class Coordinate {
         System.out.println("(" + col + "|" + row + ")");
     }
 
+
     @Override
     public boolean equals(Object o) {
         // System.err.println("Coordinate: .equals()");
@@ -26,6 +27,7 @@ public class Coordinate {
             return false;
         if (this == o)
             return true;
+
         Coordinate that = (Coordinate) o;
         return (this.row == that.row && this.col == that.col);
 

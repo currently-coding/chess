@@ -27,7 +27,7 @@ public enum Side {
         return allPaths;
     }
 
-    public boolean checkmate(Board board) {
+    public boolean checkmate(@org.jetbrains.annotations.NotNull Board board) {
         System.err.println("Side: checkmate(): checking all possible moves");
         // Add performance later
         // Check every single move -> if not checked anymore => Not checkmate
@@ -35,6 +35,13 @@ public enum Side {
         ArrayList<ArrayList<Coordinate>> attackPath = is_checked(board);
         if (attackPath.isEmpty())
             return false;
+
+        attackPath.get(1).remove(king); // moving a piece to the king position is invalid
+        try {
+            attackPath.get(2).remove(king);
+        } catch (Exception e){
+            System.err.println("Side: checkmate(): Single checkmate");
+        }
         for (Coordinate key : board.pieces.keySet()) {
             Piece piece = board.pieces.get(key);
             if (piece == null)
@@ -42,10 +49,11 @@ public enum Side {
             for (ArrayList<Coordinate> path : attackPath) {
                 for (Coordinate square : path) {
                     if (piece.move(key, square)) {
-                        
+                        return false;
                     }
                 }
             }
         }
+        return true; // TODO: change later
     }
 }

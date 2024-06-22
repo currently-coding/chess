@@ -53,7 +53,7 @@ public class Game {
     }
 
     public final Side play() {
-        introduction();
+//        introduction();
         Side active_player = Side.WHITE;
         do {
             System.err.println("Game: main game loop");

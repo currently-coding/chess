@@ -112,7 +112,7 @@ public class Board {
             moves.add(new Move(this, this.pieces.get(start), start, end));
             return true;
         } else {
-            System.out.println("Board: move(): Invalid Move!");
+            System.out.println("Board: move(): Invalid Move!: Piece != Null + Move Invalid(piece.move())");
             return false;
         }
     }

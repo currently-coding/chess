@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public enum PieceType {
     EMPTY,
@@ -74,6 +75,7 @@ public enum PieceType {
                 return this.diagonal_movement(board, start, end);
             }
             case PAWN -> {
+                // called to check whether a pawn is checking a king
                 return pawn_movement(board, start, end);
             }
             case KING -> {
@@ -83,18 +85,18 @@ public enum PieceType {
         }
     }
 
-    // rewrite all movement to return a path array they cover while moving. If
-    // invalid -> return empty array
+    // rewrite all movement to return a path array they cover while moving.
+    // If invalid -> return array with only start coordinate
     private ArrayList<Coordinate> diagonal_movement(Board board, Coordinate start, Coordinate end) {
-        ArrayList<Coordinate> result = new ArrayList<>();
+        ArrayList<Coordinate> result = new ArrayList<>(List.of(start));
         if (!(Math.abs(start.col - end.col) == 0 && Math.abs(start.row - end.col) == 0))
             return result;
-        // check for collissions on path
+        // TODO: check for collissions on path
         return result;
     }
 
     private ArrayList<Coordinate> king_movement(Coordinate start, Coordinate end) {
-        ArrayList<Coordinate> result = new ArrayList<>();
+        ArrayList<Coordinate> result = new ArrayList<>(List.of(start));
         if (!(Math.abs(start.row - end.row) < 2 && Math.abs(start.col - end.col) < 2))
             return result;
         result.add(end);
@@ -104,17 +106,17 @@ public enum PieceType {
     }
 
     private ArrayList<Coordinate> horizontal_vertical_movement(Board board, Coordinate start, Coordinate end) {
-        ArrayList<Coordinate> result = new ArrayList<>();
+        ArrayList<Coordinate> result = new ArrayList<>(List.of(start));
         // horizontal movement
         if (start.col == end.col && start.row != end.row) {
             int row = start.row;
             int direction = start.row < end.row ? 1 : -1;
-            while (row != end.row) {
+            while (row != end.row+direction) { // add end to path
                 if (board.pieces.get(new Coordinate(start.col, row)) != null) {
-                    return new ArrayList<>();
+                    return new ArrayList<>(List.of(start));
                 }
                 result.add(new Coordinate(start.col, row));
-                row += (1 * direction);
+                row += direction;
             }
             return result;
         }
@@ -122,35 +124,39 @@ public enum PieceType {
         else if (start.col != end.col && start.row == end.row) {
             int col = start.col;
             int direction = start.col < end.col ? 1 : -1;
-            while (col != end.col) {
+            while (col != end.col+direction) {
 
                 if (board.pieces.get(new Coordinate(col, start.row)) != null) {
-                    return new ArrayList<>();
+                    return new ArrayList<>(List.of(start));
                 }
                 result.add(new Coordinate(start.row, col));
-                col += (1 * direction);
+                col += direction;
             }
             return result;
         }
-
-        return result;
+        else {
+            System.err.println("PieceType: horizontal_vertical_movement(): Invalid start/end coordinates")
+            return result;
+        }
     }
 
     private ArrayList<Coordinate> knight_movement(Board board, Coordinate start, Coordinate end) {
         if (Math.abs(start.col - end.col) == 2 && Math.abs(start.row - end.row) == 1) {
-            return new ArrayList<>(Collections.singletonList(end));
+            return new ArrayList<>(List.of(start, end));
         } else if (Math.abs(start.col - end.col) == 1 && Math.abs(start.row - end.row) == 2) {
-            return new ArrayList<>(Collections.singletonList(end));
+            return new ArrayList<>(List.of(start, end));
         }
         // Knight has no collissions
-        return new ArrayList<>();
+        return new ArrayList<>(List.of(start));
     }
 
     // TODO: double check pawn movement -> not working right now
     // TODO: write en passant movement
 
     private ArrayList<Coordinate> pawn_movement(Board board, Coordinate start, Coordinate end) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        System.err.println("PieceType: pawn_movement(): Calling unsupported method.");
+//        throw new UnsupportedOperationException("Not supported yet.");
+        return new ArrayList<>();
     }
 
 }
