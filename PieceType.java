@@ -24,11 +24,11 @@ public enum PieceType {
     }
 
     public boolean possible_move(Board board, Piece piece, Coordinate start, Coordinate end) {
-        // check check
+        // check for check
         Side color = piece.getColor();
         if (!color.is_checked(board).isEmpty()) {
             // temporarily try out move
-            // store whats on the relevant fields now
+            // store what's on the relevant fields now
             Piece end_piece = board.pieces.get(end);
 
             board.pieces.put(end, piece);
@@ -135,7 +135,7 @@ public enum PieceType {
             return result;
         }
         else {
-            System.err.println("PieceType: horizontal_vertical_movement(): Invalid start/end coordinates")
+            System.err.println("PieceType: horizontal_vertical_movement(): Invalid start/end coordinates");
             return result;
         }
     }
