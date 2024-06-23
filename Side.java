@@ -11,13 +11,14 @@ public enum Side {
         Coordinate king = board.king(this);
         ArrayList<ArrayList<Coordinate>> allPaths = new ArrayList<>();
 
-        for (Coordinate coordinate : board.pieces.keySet()) { // check for each piece
+        // check for each piece
+        for (Coordinate coordinate : board.pieces.keySet()) {
             Piece piece = board.pieces.get(coordinate);
             if (piece == null) {
                 continue;
             }
             if (piece.getColor() != this) { // only opponent's pieces can check
-                ArrayList<Coordinate> path = piece.getType().valid_move(board, piece, king, king);
+                ArrayList<Coordinate> path = piece.getType().valid_move(board, piece, coordinate, king);
                 if (!path.isEmpty()) { // check if current piece could move to king's position
                     allPaths.add(path); // add path to list of all paths
                 }
@@ -36,10 +37,10 @@ public enum Side {
         if (attackPath.isEmpty())
             return false;
 
-        attackPath.get(1).remove(king); // moving a piece to the king position is invalid
+        attackPath.get(0).remove(king); // Always check the first path
         try {
-            attackPath.get(2).remove(king);
-        } catch (Exception e){
+            attackPath.get(1).remove(king);
+        } catch (IndexOutOfBoundsException e) {
             System.err.println("Side: checkmate(): Single checkmate");
         }
         for (Coordinate key : board.pieces.keySet()) {

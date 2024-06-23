@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Game {
@@ -17,11 +19,13 @@ public class Game {
     }
 
     private Coordinate[] get_move(Scanner scanner) {
+        String source, destination;
         System.out.print("New Move:\n\tStart:\t");
-        String source = scanner.next();
+        source = scanner.next();
         System.out.print("\tEnd:\t");
-        String destination = scanner.next();
+        destination = scanner.next();
         System.out.println("Move: " + source + " -> " + destination);
+
 
         // Convert the source coordinate
         int sourceCol = source.charAt(0) - 'a' + 1; // Convert letter to number (a -> 1, b -> 2, etc.)
@@ -48,24 +52,23 @@ public class Game {
                 "How to move:\n\t1. Type a letter specifying the row you want to start your move from.\n\t2.Type a number specifying the column you want your move to start from.\n\t3. Do the same to specify where you want to move to.\nYour moves will be checked for correctness.\nHave fun!");
     }
 
-    public Side switch_sides(Side active_player) {
-        return active_player == Side.BLACK ? Side.WHITE : Side.BLACK;
-    }
-
     public final Side play() {
 //        introduction();
         Side active_player = Side.WHITE;
+        int round = 0;
+
         do {
+            System.out.println("Runde : " + ++round);
             System.err.println("Game: main game loop");
             Coordinate[] move; // declare first to avoid scoping issues in do-while
             do { // repeat until valid move
                 System.err.println("Game: getting move");
                 board.display();
                 System.err.println("Game: Side: " + active_player);
-                System.out.println(active_player + ":");
+                System.out.println(active_player + "ist am Zug:");
                 move = get_move(scanner);
             } while (!board.move(move[0], move[1]));
-            active_player = switch_sides(active_player);
+            active_player = (active_player == Side.WHITE) ? Side.BLACK : Side.WHITE;
 
         } while (!board.game_over());
         if (Side.BLACK.checkmate(board)) {

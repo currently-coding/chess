@@ -27,7 +27,6 @@ public class Coordinate {
             return false;
         if (this == o)
             return true;
-
         Coordinate that = (Coordinate) o;
         return (this.row == that.row && this.col == that.col);
 

@@ -1,9 +1,7 @@
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public enum PieceType {
-    EMPTY,
     PAWN,
     KNIGHT,
     BISHOP,
@@ -105,39 +103,34 @@ public enum PieceType {
 
     }
 
-    private ArrayList<Coordinate> horizontal_vertical_movement(Board board, Coordinate start, Coordinate end) {
-        ArrayList<Coordinate> result = new ArrayList<>(List.of(start));
-        // horizontal movement
-        if (start.col == end.col && start.row != end.row) {
-            int row = start.row;
-            int direction = start.row < end.row ? 1 : -1;
-            while (row != end.row+direction) { // add end to path
-                if (board.pieces.get(new Coordinate(start.col, row)) != null) {
-                    return new ArrayList<>(List.of(start));
-                }
-                result.add(new Coordinate(start.col, row));
-                row += direction;
-            }
-            return result;
-        }
-        // vertical movement
-        else if (start.col != end.col && start.row == end.row) {
-            int col = start.col;
-            int direction = start.col < end.col ? 1 : -1;
-            while (col != end.col+direction) {
 
-                if (board.pieces.get(new Coordinate(col, start.row)) != null) {
-                    return new ArrayList<>(List.of(start));
-                }
-                result.add(new Coordinate(start.row, col));
-                col += direction;
+    private ArrayList<Coordinate> horizontal_vertical_movement(Board board, Coordinate start, Coordinate end) {
+        ArrayList<Coordinate> path = new ArrayList<>();
+        path.add(start);
+        // Check if the movement is purely horizontal or vertical
+        if (start.row != end.row && start.col != end.col) {
+            return path; // Invalid movement for a rook
+        }
+
+        // Determine the direction of movement and step increment
+        int rowStep = Integer.compare(end.row, start.row); // -1 for up, 1 for down, 0 for no row change
+        int colStep = Integer.compare(end.col, start.col); // -1 for left, 1 for right, 0 for no col change
+
+        // Traverse the path from start to end
+        int currentRow = start.row + rowStep;
+        int currentCol = start.col + colStep;
+        while (currentRow != end.row || currentCol != end.col) {
+            Coordinate currentCoord = new Coordinate(currentRow, currentCol);
+            if (board.pieces.get(currentCoord) != null) {
+                return new ArrayList<>(List.of(start)); // Path is blocked, return just the start coordinate
             }
-            return result;
+            path.add(currentCoord);
+            currentRow += rowStep;
+            currentCol += colStep;
         }
-        else {
-            System.err.println("PieceType: horizontal_vertical_movement(): Invalid start/end coordinates");
-            return result;
-        }
+        path.add(end); // Add the end coordinate to the path
+
+        return path;
     }
 
     private ArrayList<Coordinate> knight_movement(Board board, Coordinate start, Coordinate end) {

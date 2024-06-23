@@ -19,33 +19,34 @@ public class Board {
     private void setupPieces() {
         // WHITE
         System.err.println("Setting up Pieces");
-        pieces.put(new Coordinate(1, 1), new Piece(this, PieceType.ROOK, Side.WHITE));
-        pieces.put(new Coordinate(1, 2), new Piece(this, PieceType.KNIGHT, Side.WHITE));
-        pieces.put(new Coordinate(1, 3), new Piece(this, PieceType.BISHOP, Side.WHITE));
-        pieces.put(new Coordinate(1, 4), new Piece(this, PieceType.QUEEN, Side.WHITE));
+//        pieces.put(new Coordinate(1, 1), new Piece(this, PieceType.ROOK, Side.WHITE));
+//        pieces.put(new Coordinate(1, 2), new Piece(this, PieceType.KNIGHT, Side.WHITE));
+//        pieces.put(new Coordinate(1, 3), new Piece(this, PieceType.BISHOP, Side.WHITE));
+//        pieces.put(new Coordinate(1, 4), new Piece(this, PieceType.QUEEN, Side.WHITE));
         white_king = new Coordinate(1, 5);
         pieces.put(white_king, new Piece(this, PieceType.KING, Side.WHITE));
-        pieces.put(new Coordinate(1, 6), new Piece(this, PieceType.BISHOP, Side.WHITE));
-        pieces.put(new Coordinate(1, 7), new Piece(this, PieceType.KNIGHT, Side.WHITE));
-        pieces.put(new Coordinate(1, 8), new Piece(this, PieceType.ROOK, Side.WHITE));
-        // WHITE PAWNs
-        for (int i = 1; i < 9; i++) {
-            pieces.put(new Coordinate(2, i), new Piece(this, PieceType.PAWN, Side.WHITE));
-        }
-        // BLACK
-        pieces.put(new Coordinate(8, 1), new Piece(this, PieceType.ROOK, Side.BLACK));
-        pieces.put(new Coordinate(8, 2), new Piece(this, PieceType.KNIGHT, Side.BLACK));
-        pieces.put(new Coordinate(8, 3), new Piece(this, PieceType.BISHOP, Side.BLACK));
-        pieces.put(new Coordinate(8, 4), new Piece(this, PieceType.QUEEN, Side.BLACK));
+        pieces.put(new Coordinate(1, 1), new Piece(this, PieceType.ROOK, Side.WHITE));
+////        pieces.put(new Coordinate(1, 6), new Piece(this, PieceType.BISHOP, Side.WHITE));
+////        pieces.put(new Coordinate(1, 7), new Piece(this, PieceType.KNIGHT, Side.WHITE));
+////        pieces.put(new Coordinate(1, 8), new Piece(this, PieceType.ROOK, Side.WHITE));
+////        // WHITE PAWNs
+////        for (int i = 1; i < 9; i++) {
+////            pieces.put(new Coordinate(2, i), new Piece(this, PieceType.PAWN, Side.WHITE));
+////        }
+//        // BLACK
+//        pieces.put(new Coordinate(8, 1), new Piece(this, PieceType.ROOK, Side.BLACK));
+//        pieces.put(new Coordinate(8, 2), new Piece(this, PieceType.KNIGHT, Side.BLACK));
+//        pieces.put(new Coordinate(8, 3), new Piece(this, PieceType.BISHOP, Side.BLACK));
+//        pieces.put(new Coordinate(8, 4), new Piece(this, PieceType.QUEEN, Side.BLACK));
         black_king = new Coordinate(8, 5);
         pieces.put(black_king, new Piece(this, PieceType.KING, Side.BLACK));
-        pieces.put(new Coordinate(8, 6), new Piece(this, PieceType.BISHOP, Side.BLACK));
-        pieces.put(new Coordinate(8, 7), new Piece(this, PieceType.KNIGHT, Side.BLACK));
-        pieces.put(new Coordinate(8, 8), new Piece(this, PieceType.ROOK, Side.BLACK));
-        // BLACK PAWNs
-        for (int i = 1; i < 9; i++) {
-            pieces.put(new Coordinate(7, i), new Piece(this, PieceType.PAWN, Side.BLACK));
-        }
+//        pieces.put(new Coordinate(8, 6), new Piece(this, PieceType.BISHOP, Side.BLACK));
+//        pieces.put(new Coordinate(8, 7), new Piece(this, PieceType.KNIGHT, Side.BLACK));
+//        pieces.put(new Coordinate(8, 8), new Piece(this, PieceType.ROOK, Side.BLACK));
+//        // BLACK PAWNs
+//        for (int i = 1; i < 9; i++) {
+//            pieces.put(new Coordinate(7, i), new Piece(this, PieceType.PAWN, Side.BLACK));
+//        }
     }
 
     protected Coordinate king(Side side) {
@@ -94,25 +95,24 @@ public class Board {
         System.err.println("Board: moving");
         Piece piece = pieces.get(start);
         if (piece == null) {
-            System.err.println("Invalid starting position/mapped wrong in pieces map!");
+            System.err.println("Board: move(): Trying to access piece leading to NullPtr `piece == null`");
             return false;
         }
-
         else if (piece.move(start, end)) {
             if (pieces.get(end) != null) {
                 System.out.print("Taking ");
                 pieces.get(end).print();
                 System.out.print(" on ");
                 end.print();
-                System.out.println("");
+                System.out.println();
             }
             System.err.print("Board: move(): Valid Move!");
             pieces.put(end, piece); // overriding piece on end square
-            pieces.put(start, null); // removing piece from starting square
-            moves.add(new Move(this, this.pieces.get(start), start, end));
+            pieces.remove(start); // removing piece from starting square
+            moves.add(new Move(this, this.pieces.get(end), start, end));
             return true;
         } else {
-            System.out.println("Board: move(): Invalid Move!: Piece != Null + Move Invalid(piece.move())");
+            System.err.println("Board: move(): Invalid Move!: Piece != Null + Move Invalid(piece.move())");
             return false;
         }
     }
