@@ -1,5 +1,4 @@
 
-import java.net.CookieHandler;
 import java.util.ArrayList;
 
 public enum Side {
@@ -28,7 +27,7 @@ public enum Side {
         return allPaths;
     }
 
-    public boolean checkmate(@org.jetbrains.annotations.NotNull Board board) {
+    public boolean checkmate(Board board) {
         System.err.println("Side: checkmate(): checking all possible moves");
         // Add performance later
         // Check every single move -> if not checked anymore => Not checkmate

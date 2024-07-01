@@ -5,15 +5,27 @@ import java.util.Map;
 
 public class Board {
     protected Map<Coordinate, Piece> pieces;
-    private final ArrayList<Move> moves; // even == Black, odd == White
+    private final ArrayList<Move> moves; // odd == Black, even == White
     private Coordinate white_king;
     private Coordinate black_king;
 
+    public Board(Coordinate king_w, Coordinate king_b) {
+        System.err.println("Board: Creating new Board");
+        pieces = new HashMap<>();
+        moves = new ArrayList<>();
+        white_king = king_w;
+        black_king = king_b;
+        setupPieces();
+
+    }
     public Board() {
         System.err.println("Board: Creating new Board");
         pieces = new HashMap<>();
         moves = new ArrayList<>();
+        white_king = new Coordinate(5, 8);
+        black_king = new Coordinate(5, 1);
         setupPieces();
+
     }
 
     private void setupPieces() {
@@ -23,7 +35,6 @@ public class Board {
 //        pieces.put(new Coordinate(1, 2), new Piece(this, PieceType.KNIGHT, Side.WHITE));
 //        pieces.put(new Coordinate(1, 3), new Piece(this, PieceType.BISHOP, Side.WHITE));
 //        pieces.put(new Coordinate(1, 4), new Piece(this, PieceType.QUEEN, Side.WHITE));
-        white_king = new Coordinate(1, 5);
         pieces.put(white_king, new Piece(this, PieceType.KING, Side.WHITE));
         pieces.put(new Coordinate(1, 1), new Piece(this, PieceType.ROOK, Side.WHITE));
 ////        pieces.put(new Coordinate(1, 6), new Piece(this, PieceType.BISHOP, Side.WHITE));
@@ -38,7 +49,6 @@ public class Board {
 //        pieces.put(new Coordinate(8, 2), new Piece(this, PieceType.KNIGHT, Side.BLACK));
 //        pieces.put(new Coordinate(8, 3), new Piece(this, PieceType.BISHOP, Side.BLACK));
 //        pieces.put(new Coordinate(8, 4), new Piece(this, PieceType.QUEEN, Side.BLACK));
-        black_king = new Coordinate(8, 5);
         pieces.put(black_king, new Piece(this, PieceType.KING, Side.BLACK));
 //        pieces.put(new Coordinate(8, 6), new Piece(this, PieceType.BISHOP, Side.BLACK));
 //        pieces.put(new Coordinate(8, 7), new Piece(this, PieceType.KNIGHT, Side.BLACK));

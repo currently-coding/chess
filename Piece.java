@@ -10,10 +10,6 @@ public class Piece {
         this.board = board;
     }
 
-    public PieceType getSymbol() {
-        return type;
-    }
-
     public void print_type() {
         type.print_short();
     }

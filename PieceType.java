@@ -47,10 +47,7 @@ public enum PieceType {
             return false;
         }
         ArrayList<Coordinate> path = valid_move(board, piece, start, end);
-        if (path.isEmpty()) {
-            return false;
-        }
-        return true;
+        return !path.isEmpty();
     }
 
     public ArrayList<Coordinate> valid_move(Board board, Piece piece, Coordinate start, Coordinate end) {
