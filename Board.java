@@ -1,11 +1,11 @@
-
+import java.util.Optional;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Board {
     protected Map<Coordinate, Piece> pieces;
-    private final ArrayList<Move> moves;
+    private ArrayList<Move> moves;
 
     public Board() {
 
@@ -17,12 +17,14 @@ public class Board {
 
     private void setupPieces() {
         // CHECKMATE setup
-        pieces.put(new Coordinate(8, 1), new Piece(this, PieceType.ROOK, Side.WHITE));
-        pieces.put(new Coordinate(6, 8), new Piece(this, PieceType.QUEEN, Side.WHITE));
-        pieces.put(new Coordinate(1, 1), new Piece(this, PieceType.KING,
-                Side.WHITE));
-        pieces.put(new Coordinate(8, 8), new Piece(this, PieceType.KING,
-                Side.BLACK));
+        // pieces.put(new Coordinate(1, 1), new Piece(this, PieceType.BISHOP,
+        // Side.WHITE));
+        // pieces.put(new Coordinate(6, 8), new Piece(this, PieceType.QUEEN,
+        // Side.WHITE));
+        // pieces.put(new Coordinate(3, 4), new Piece(this, PieceType.KING,
+        // Side.WHITE));
+        // pieces.put(new Coordinate(8, 8), new Piece(this, PieceType.KING,
+        // Side.BLACK));
         // BISHOP setup
         // pieces.put(new Coordinate(5, 6), new Piece(this, PieceType.BISHOP,
         // Side.WHITE));
@@ -31,95 +33,105 @@ public class Board {
         // pieces.put(new Coordinate(8, 8), new Piece(this, PieceType.KING,
         // Side.BLACK));
         // NORMAL setup
-        // pieces.put(new Coordinate(1, 1), new Piece(this, PieceType.ROOK,
-        // Side.WHITE)); // White Rook at (1, 1)
-        // pieces.put(new Coordinate(1, 2), new Piece(this, PieceType.KNIGHT,
-        // Side.WHITE)); // White Knight at (2, 1)
-        // pieces.put(new Coordinate(1, 3), new Piece(this, PieceType.BISHOP,
-        // Side.WHITE)); // White Bishop at (3, 1)
-        // pieces.put(new Coordinate(1, 4), new Piece(this, PieceType.QUEEN,
-        // Side.WHITE)); // White Queen at (4, 1)
-        // pieces.put(new Coordinate(1, 5), new Piece(this, PieceType.KING,
-        // Side.WHITE)); // White King at (5, 1)
-        // pieces.put(new Coordinate(1, 6), new Piece(this, PieceType.BISHOP,
-        // Side.WHITE)); // White Bishop at (6, 1)
-        // pieces.put(new Coordinate(1, 7), new Piece(this, PieceType.KNIGHT,
-        // Side.WHITE)); // White Knight at (7, 1)
-        // pieces.put(new Coordinate(1, 8), new Piece(this, PieceType.ROOK,
-        // Side.WHITE)); // White Rook at (8, 1)
+        pieces.put(new Coordinate(1, 1), new Piece(this, PieceType.ROOK,
+                Side.WHITE)); // White Rook at (1, 1)
+        pieces.put(new Coordinate(1, 2), new Piece(this, PieceType.KNIGHT,
+                Side.WHITE)); // White Knight at (2, 1)
+        pieces.put(new Coordinate(1, 3), new Piece(this, PieceType.BISHOP,
+                Side.WHITE)); // White Bishop at (3, 1)
+        pieces.put(new Coordinate(1, 4), new Piece(this, PieceType.QUEEN,
+                Side.WHITE)); // White Queen at (4, 1)
+        pieces.put(new Coordinate(1, 5), new Piece(this, PieceType.KING,
+                Side.WHITE)); // White King at (5, 1)
+        pieces.put(new Coordinate(1, 6), new Piece(this, PieceType.BISHOP,
+                Side.WHITE)); // White Bishop at (6, 1)
+        pieces.put(new Coordinate(1, 7), new Piece(this, PieceType.KNIGHT,
+                Side.WHITE)); // White Knight at (7, 1)
+        pieces.put(new Coordinate(1, 8), new Piece(this, PieceType.ROOK,
+                Side.WHITE)); // White Rook at (8, 1)
 
         // White pawns
-        // for (int i = 1; i <= 8; i++) {
-        // pieces.put(new Coordinate(2, i), new Piece(this, PieceType.PAWN,
-        // Side.WHITE)); // White Pawns at (1, 2) to
-        // // (8, 2)
-        // }
+        for (int i = 1; i <= 8; i++) {
+            pieces.put(new Coordinate(2, i), new Piece(this, PieceType.PAWN,
+                    Side.WHITE)); // White Pawns at (1, 2) to
+            // (8, 2)
+        }
 
         // Black pieces
-        // pieces.put(new Coordinate(8, 1), new Piece(this, PieceType.ROOK,
-        // Side.BLACK)); // Black Rook at (1, 8)
-        // pieces.put(new Coordinate(8, 2), new Piece(this, PieceType.KNIGHT,
-        // Side.BLACK)); // Black Knight at (2, 8)
-        // pieces.put(new Coordinate(8, 3), new Piece(this, PieceType.BISHOP,
-        // Side.BLACK)); // Black Bishop at (3, 8)
-        // pieces.put(new Coordinate(8, 4), new Piece(this, PieceType.QUEEN,
-        // Side.BLACK)); // Black Queen at (4, 8)
-        // pieces.put(new Coordinate(8, 5), new Piece(this, PieceType.KING,
-        // Side.BLACK)); // Black King at (5, 8)
-        // pieces.put(new Coordinate(8, 6), new Piece(this, PieceType.BISHOP,
-        // Side.BLACK)); // Black Bishop at (6, 8)
-        // pieces.put(new Coordinate(8, 7), new Piece(this, PieceType.KNIGHT,
-        // Side.BLACK)); // Black Knight at (7, 8)
-        // pieces.put(new Coordinate(8, 8), new Piece(this, PieceType.ROOK,
-        // Side.BLACK)); // Black Rook at (8, 8)
+        pieces.put(new Coordinate(8, 1), new Piece(this, PieceType.ROOK,
+                Side.BLACK)); // Black Rook at (1, 8)
+        pieces.put(new Coordinate(8, 2), new Piece(this, PieceType.KNIGHT,
+                Side.BLACK)); // Black Knight at (2, 8)
+        pieces.put(new Coordinate(8, 3), new Piece(this, PieceType.BISHOP,
+                Side.BLACK)); // Black Bishop at (3, 8)
+        pieces.put(new Coordinate(8, 4), new Piece(this, PieceType.QUEEN,
+                Side.BLACK)); // Black Queen at (4, 8)
+        pieces.put(new Coordinate(8, 5), new Piece(this, PieceType.KING,
+                Side.BLACK)); // Black King at (5, 8)
+        pieces.put(new Coordinate(8, 6), new Piece(this, PieceType.BISHOP,
+                Side.BLACK)); // Black Bishop at (6, 8)
+        pieces.put(new Coordinate(8, 7), new Piece(this, PieceType.KNIGHT,
+                Side.BLACK)); // Black Knight at (7, 8)
+        pieces.put(new Coordinate(8, 8), new Piece(this, PieceType.ROOK,
+                Side.BLACK)); // Black Rook at (8, 8)
 
-        // // Black pawns
-        // for (int i = 1; i <= 8; i++) {
-        // pieces.put(new Coordinate(7, i), new Piece(this, PieceType.PAWN,
-        // Side.BLACK)); // Black Pawns at (1, 7) to
-        // // (8, 7)
-        // }
-    }
-
-    protected Coordinate king(Side side) {
-        /**
-         * really inefficent, should update to constantly just update the pos
-         */
-        switch (side) {
-            case WHITE -> {
-                Coordinate white_king = new Coordinate(-1, -1);
-                for (Coordinate pos : this.pieces.keySet()) {
-                    Piece piece = this.pieces.get(pos);
-                    if (piece == null) {
-                        continue;
-                    }
-                    if (piece.getColor().equals(Side.WHITE) && piece.getType().equals(PieceType.KING)) {
-                        white_king = pos;
-                    }
-
-                }
-                return white_king;
-            }
-            case BLACK -> {
-                Coordinate black_king = new Coordinate(-1, -1);
-                for (Coordinate pos : this.pieces.keySet()) {
-                    Piece piece = this.pieces.get(pos);
-                    if (piece == null) {
-                        continue;
-                    }
-                    if (piece.getColor().equals(Side.BLACK) && piece.getType().equals(PieceType.KING)) {
-                        black_king = pos;
-                    }
-
-                }
-                return black_king;
-            }
-            default -> {
-                System.out.println("YOU REALLY ARE STUPID. THERE IS JUST BLACK AND WHITE");
-                return new Coordinate();
-            }
+        // Black pawns
+        for (int i = 1; i <= 8; i++) {
+            pieces.put(new Coordinate(7, i), new Piece(this, PieceType.PAWN,
+                    Side.BLACK)); // Black Pawns at (1, 7) to
+            // (8, 7)
         }
     }
+
+    protected Optional<Coordinate> king(Side side) {
+        return pieces.entrySet()
+                .stream()
+                .filter(e -> e.getValue() != null && e.getValue().getType() == PieceType.KING
+                        && e.getValue().getColor() == side)
+                .map(Map.Entry::getKey)
+                .findFirst();
+    }
+
+    // protected Coordinate king(Side side) {
+    // /**
+    // * really inefficent, should update to constantly just update the pos
+    // */
+    // switch (side) {
+    // case WHITE -> {
+    // Coordinate white_king = new Coordinate(-1, -1);
+    // for (Coordinate pos : this.pieces.keySet()) {
+    // Piece piece = this.pieces.get(pos);
+    // if (piece == null) {
+    // continue;
+    // }
+    // if (piece.getColor().equals(Side.WHITE) &&
+    // piece.getType().equals(PieceType.KING)) {
+    // return pos;
+    // }
+    //
+    // }
+    // throw new NotFoun:
+    // }
+    // case BLACK -> {
+    // Coordinate black_king = new Coordinate(-1, -1);
+    // for (Coordinate pos : this.pieces.keySet()) {
+    // Piece piece = this.pieces.get(pos);
+    // if (piece == null) {
+    // continue;
+    // }
+    // if (piece.getColor().equals(Side.BLACK) &&
+    // piece.getType().equals(PieceType.KING)) {
+    // black_king = pos;
+    // }
+    //
+    // }
+    // return black_king;
+    // }
+    // default -> {
+    // throw new IllegalArgumentException("Unknown side: " + this);
+    // }
+    // }
+    // }
 
     public void display() {
         // Display column letters
@@ -214,14 +226,22 @@ public class Board {
         return (pieces.get(end) != null);
     }
 
-    public void print_moves() {
-        for (Move m : moves) {
-            m.print();
+    public boolean lastMoveWasDoublePawnMove(Coordinate enPassantTarget) {
+        if (moves.isEmpty()) {
+            return false;
         }
-    }
+        Move lastMove = moves.get(moves.size() - 1);
+        Piece lastMovedPiece = lastMove.getPiece();
 
-    public boolean game_over() {
-        return Side.BLACK.checkmate(this) || Side.WHITE.checkmate(this);
-    }
+        // Check if the last move was a double pawn move
+        if (lastMovedPiece != null && lastMovedPiece.getType() == PieceType.PAWN) {
+            int startRow = lastMove.getStart().row;
+            int endRow = lastMove.getEnd().row;
 
+            // Double move is valid if start row and end row differ by 2
+            return Math.abs(startRow - endRow) == 2
+                    && lastMove.getEnd().equals(enPassantTarget);
+        }
+        return false;
+    }
 }

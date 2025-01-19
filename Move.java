@@ -1,7 +1,7 @@
 public class Move {
-    Piece piece;
-    Coordinate start;
-    Coordinate end;
+    private Piece piece;
+    private Coordinate start;
+    private Coordinate end;
 
     public Move(Board board, Piece piece, Coordinate start, Coordinate end) {
 
@@ -10,13 +10,21 @@ public class Move {
         this.end = end;
     }
 
-    public void print() {
-        piece.print();
+    @Override
+    public String toString() {
+        return piece.toString() + start.toString() + end.toString();
+    }
 
-        start.print();
+    public Piece getPiece() {
+        return this.piece;
+    }
 
-        end.print();
+    public Coordinate getEnd() {
+        return this.end;
+    }
 
+    public Coordinate getStart() {
+        return this.start;
     }
 
 }

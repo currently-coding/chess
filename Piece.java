@@ -10,11 +10,12 @@ public class Piece {
     }
 
     public String get_string_type() {
-        return type.print_short();
+        return type.toString();
     }
 
-    public void print() {
-        System.out.print("Piece: " + color.toString() + type.print_short());
+    @Override
+    public String toString() {
+        return ("Piece: " + type + "(" + color.toString() + ")" + type.toString());
     }
 
     public PieceType getType() {
